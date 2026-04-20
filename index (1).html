@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Per Scholas STL — Employer Partner Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ede8;color:#1a1a1a;font-size:14px;}
+.shell{max-width:1060px;margin:0 auto;padding:16px;}
+/* HEADER */
+.header{background:white;border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.logo{width:42px;height:42px;background:#1a3d6e;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;}
+.org-name{font-weight:800;font-size:17px;}.org-sub{color:#777;font-size:12px;}
+.year-badge{background:white;border:1.5px solid #1a3d6e;color:#1a3d6e;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;}
+/* TRACK SELECTOR */
+.track-selector{background:white;border-radius:12px;padding:14px 20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.track-selector-label{font-size:10px;font-weight:800;letter-spacing:0.07em;color:#999;text-transform:uppercase;margin-bottom:10px;}
+.track-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.track-pill{padding:8px 16px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;color:#555;}
+.track-pill:hover{border-color:#1a3d6e;color:#1a3d6e;}
+.track-pill.active{background:#1a3d6e;color:white;border-color:#1a3d6e;}
+.track-pill.all.active{background:#1a3d6e;}
+/* TABS */
+.tab-nav{display:flex;gap:4px;margin-bottom:12px;background:white;border-radius:10px;padding:4px;box-shadow:0 1px 3px rgba(0,0,0,0.07);}
+.tab-btn{flex:1;padding:9px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:#666;transition:all 0.15s;}
+.tab-btn.active{background:#1a3d6e;color:white;font-weight:700;}
+.tab-btn:hover:not(.active){background:#f0ede8;}
+.panel{display:none;}.panel.active{display:block;}
+/* JOURNEY */
+.journey-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
+.jcard{background:white;border-radius:10px;padding:14px 12px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.jcard:hover,.jcard.active{border-color:#1a3d6e;background:#eef2f8;}
+.jcard-icon{font-size:24px;margin-bottom:6px;}.jcard-title{font-weight:700;font-size:12px;}.jcard-sub{font-size:11px;color:#3b82c4;margin-top:3px;}
+.jdetail{background:white;border-radius:10px;padding:14px 16px;margin-bottom:12px;border-left:4px solid #1a3d6e;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.jdetail h3{font-size:13px;font-weight:800;color:#1a3d6e;margin-bottom:5px;}.jdetail p{font-size:12px;color:#444;line-height:1.6;}
+.jdetail ul{padding-left:16px;margin-top:6px;}.jdetail li{font-size:12px;color:#444;line-height:1.8;}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.stat-card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.stat-num{font-size:28px;font-weight:900;}.stat-label{font-size:11px;color:#666;margin-top:2px;}
+.sec-lbl{font-size:10px;font-weight:800;letter-spacing:0.07em;color:#999;text-transform:uppercase;margin-bottom:8px;}
+/* UPCOMING TRACKS TABLE */
+.upcoming-section{background:white;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.upcoming-section h3{font-size:13px;font-weight:800;color:#1a3d6e;margin-bottom:10px;}
+.track-table{width:100%;border-collapse:collapse;font-size:12px;}
+.track-table th{background:#1a3d6e;color:white;padding:8px 12px;text-align:left;font-size:11px;font-weight:700;}
+.track-table th:first-child{border-radius:6px 0 0 0;}.track-table th:last-child{border-radius:0 6px 0 0;}
+.track-table td{padding:7px 12px;border-bottom:1px solid #f3f3f3;color:#333;}
+.track-table tr:last-child td{border-bottom:none;}
+.track-table tr:hover td{background:#f7f9fc;}
+.mod-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;}
+.mod-ip{background:#dcfce7;color:#166534;}
+.mod-rm{background:#dbeafe;color:#1e40af;}
+.mod-hy{background:#fef3c7;color:#92400e;}
+/* PIPELINE */
+.pipeline-controls{display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-wrap:wrap;}
+.search-bar{background:white;border-radius:8px;padding:9px 14px;flex:1;min-width:200px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.search-bar input{border:none;outline:none;font-size:13px;flex:1;background:transparent;}
+.dropdown-wrap{position:relative;}
+.dropdown-btn{background:white;border:1.5px solid #1a3d6e;color:#1a3d6e;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.dropdown-btn:hover{background:#eef2f8;}
+.dropdown-menu{position:absolute;top:calc(100% + 4px);right:0;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);min-width:290px;max-height:380px;overflow-y:auto;z-index:100;display:none;}
+.dropdown-menu.open{display:block;}
+.dropdown-section{padding:6px 0;}
+.dropdown-section-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#aaa;padding:4px 14px 2px;}
+.dropdown-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;transition:background 0.1s;}
+.dropdown-item:hover{background:#f5f5f5;}
+.di-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:white;flex-shrink:0;}
+.di-name{font-size:12px;font-weight:600;flex:1;}
+.di-st{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;}
+.di-ir{background:#dcfce7;color:#166534;}.di-tr{background:#dbeafe;color:#1e40af;}.di-aw{background:#fef3c7;color:#92400e;}
+.track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.track-card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.track-card.hidden{display:none;}
+.track-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.track-icon{width:28px;height:28px;border-radius:6px;background:#eef2f8;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.track-name{font-size:12px;font-weight:800;}
+.lrow{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid #f3f3f3;}
+.lrow:last-of-type{border-bottom:none;}
+.lrow.clk{cursor:pointer;}.lrow.clk:hover .lname{color:#1a3d6e;text-decoration:underline;}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:white;flex-shrink:0;}
+.lname{font-size:12px;flex:1;font-weight:500;}
+.cb{font-size:9px;background:#eef2f8;color:#1a3d6e;border-radius:4px;padding:2px 5px;font-weight:700;}
+.ir-t{font-size:9px;background:#dcfce7;color:#166534;border-radius:4px;padding:2px 7px;font-weight:700;}
+.tr-t{font-size:9px;background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 7px;font-weight:700;}
+.aw-t{font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 7px;font-weight:700;}
+.add-l{font-size:11px;color:#1a3d6e;cursor:pointer;margin-top:8px;display:block;}
+/* ACTIVE TRACK BANNER */
+.active-track-banner{display:none;background:#eef2f8;border-radius:10px;padding:12px 16px;margin-bottom:12px;border-left:4px solid #1a3d6e;}
+.active-track-banner.show{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.atb-title{font-size:14px;font-weight:800;color:#1a3d6e;}
+.atb-stats{display:flex;gap:16px;}
+.atb-stat{text-align:center;}
+.atb-num{font-size:20px;font-weight:900;color:#1a3d6e;}
+.atb-lbl{font-size:10px;color:#666;}
+/* BUTTONS */
+.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.btn{border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;border:none;}
+.btn-p{background:#1a3d6e;color:white;}.btn-p:hover{background:#0f2a50;}
+.btn-s{background:white;color:#1a3d6e;border:1.5px solid #1a3d6e;}.btn-s:hover{background:#eef2f8;}
+.btn-li{background:#0a66c2;color:white;border:none;}.btn-li:hover{background:#004182;}
+/* POWER SKILLS */
+.ir-banner{background:#dcfce7;border:1.5px solid #86efac;border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;}
+.ir-banner-text{font-size:12px;color:#166534;line-height:1.6;}.ir-banner-text strong{font-weight:800;}
+.ps-controls{display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap;}
+.ps-select{flex:1;min-width:240px;padding:9px 14px;border-radius:8px;border:1.5px solid #1a3d6e;font-size:13px;font-weight:600;color:#1a3d6e;background:white;cursor:pointer;outline:none;}
+.ps-header{background:#eef2f8;border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.ps-header-left h2{font-size:15px;font-weight:900;color:#1a3d6e;}.ps-header-left p{font-size:11px;color:#555;margin-top:2px;}
+.ps-track-tag{display:inline-block;background:#1a3d6e;color:white;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:700;margin-top:4px;}
+.ps-comp{background:#1a3d6e;color:white;border-radius:8px;padding:8px 16px;text-align:center;white-space:nowrap;}
+.ps-comp-num{font-size:22px;font-weight:900;}.ps-comp-lbl{font-size:9px;opacity:0.8;}
+.ss-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;}
+.ss-card{background:white;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.ss-hdr{display:flex;align-items:center;gap:7px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #f3f3f3;}
+.ss-icon{font-size:18px;}.ss-title{font-size:13px;font-weight:800;}.ss-src{font-size:10px;color:#aaa;margin-left:auto;}
+.ss-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.ss-lbl{font-size:11px;color:#555;width:135px;flex-shrink:0;}
+.bar-bg{flex:1;height:7px;background:#f0ede8;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;}
+.ss-sc{font-size:11px;font-weight:800;width:28px;text-align:right;color:#333;}
+.ss-note{background:#f7f9fc;border-radius:8px;padding:9px 12px;margin-top:10px;font-size:11px;color:#444;line-height:1.5;font-style:italic;}
+.ss-note strong{color:#1a3d6e;font-style:normal;}
+.ps-doc-row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.doc-card{background:white;border-radius:10px;padding:14px 16px;flex:1;min-width:220px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;transition:all 0.15s;border:1.5px solid transparent;}
+.doc-card:hover{border-color:#1a3d6e;background:#eef2f8;}
+.doc-icon{font-size:28px;}.doc-title{font-size:13px;font-weight:800;color:#1a3d6e;}.doc-sub{font-size:11px;color:#666;margin-top:2px;}.doc-dl{font-size:10px;color:#1a3d6e;font-weight:700;margin-top:4px;}
+/* JOURNEY TRACKER */
+.jt-tracker{background:white;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.jt-tracker h3{font-size:14px;font-weight:800;color:#1a3d6e;margin-bottom:12px;}
+.jt-steps{display:flex;align-items:flex-start;margin-bottom:16px;}
+.jt-step{flex:1;text-align:center;position:relative;}
+.jt-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:#e5e7eb;z-index:0;}
+.jt-step.done:not(:last-child)::after,.jt-step.cur:not(:last-child)::after{background:#1a3d6e;}
+.jt-dot{width:28px;height:28px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#999;margin:0 auto 6px;position:relative;z-index:1;}
+.jt-step.done .jt-dot{background:#1a3d6e;color:white;}.jt-step.cur .jt-dot{background:#22c55e;color:white;box-shadow:0 0 0 3px #dcfce7;}
+.jt-lbl{font-size:10px;color:#666;font-weight:600;}.jt-step.cur .jt-lbl{color:#1a3d6e;font-weight:800;}
+.jt-info{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.jt-ic{background:#f7f9fc;border-radius:8px;padding:10px 12px;}
+.jt-il{font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+.jt-iv{font-size:12px;font-weight:800;color:#1a3d6e;margin-top:2px;}
+/* ALUMNI */
+.alumni-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.a-stat{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.a-stat-num{font-size:24px;font-weight:900;color:#1a3d6e;}.a-stat-label{font-size:11px;color:#666;margin-top:2px;}
+.li-cta-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.li-cta{border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.li-cta.blue{background:#0a66c2;}.li-cta.navy{background:#1a3d6e;}
+.li-cta h3{font-size:13px;font-weight:800;color:white;margin-bottom:2px;}.li-cta p{font-size:11px;color:rgba(255,255,255,0.85);line-height:1.5;}
+.li-cta-btn{background:white;border:none;border-radius:7px;padding:8px 14px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;align-self:flex-start;}
+.li-cta.blue .li-cta-btn{color:#0a66c2;}.li-cta.navy .li-cta-btn{color:#1a3d6e;}
+.li-cta-btn:hover{opacity:0.9;}
+.alumni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+@media(min-width:800px){.alumni-grid{grid-template-columns:repeat(4,1fr);}}
+.alumni-card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:flex-start;gap:10px;}
+.a-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0;}
+.a-name{font-size:13px;font-weight:800;}.a-role{font-size:11px;color:#444;margin-top:1px;}.a-emp{font-size:11px;color:#3b82c4;font-weight:600;margin-top:1px;}.a-track{font-size:10px;color:#aaa;margin-top:3px;}
+.li-pb{display:inline-flex;align-items:center;gap:4px;background:#0a66c2;color:white;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;margin-top:7px;text-decoration:none;}
+.li-pb:hover{background:#004182;}
+/* TESTIMONIALS */
+.t-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px;}
+@media(min-width:800px){.t-grid{grid-template-columns:repeat(3,1fr);}}
+.t-card{background:white;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid #1a3d6e;}
+.t-stars{color:#f59e0b;font-size:13px;margin-bottom:4px;}
+.t-quote{font-size:12px;color:#333;line-height:1.7;font-style:italic;margin-bottom:10px;}
+.t-attr{font-size:11px;font-weight:800;color:#1a3d6e;}.t-co{font-size:11px;color:#777;}
+.t-cta{background:linear-gradient(135deg,#1a3d6e,#2563eb);border-radius:10px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:10px;}
+.t-cta-text h3{font-size:14px;font-weight:800;color:white;margin-bottom:4px;}.t-cta-text p{font-size:11px;color:rgba(255,255,255,0.85);line-height:1.5;}
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:300;padding:16px;}
+.overlay.open{display:flex;}
+.modal{background:white;border-radius:14px;padding:0;width:560px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.25);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;}
+.modal-hdr{background:#1a3d6e;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.modal-hdr h2{font-size:15px;font-weight:800;color:white;}
+.modal-close{background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:20px;overflow-y:auto;}
+.m-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#aaa;margin-bottom:5px;margin-top:14px;}
+.m-lbl:first-child{margin-top:0;}
+.m-ready{display:inline-block;background:#dcfce7;color:#166534;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.mbadges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.mbadge{background:#eef2f8;color:#1a3d6e;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;}
+/* PDF */
+.pdf-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:none;align-items:center;justify-content:center;z-index:500;padding:20px;}
+.pdf-overlay.open{display:flex;}
+.pdf-modal{background:white;border-radius:12px;width:720px;max-width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 16px 50px rgba(0,0,0,0.3);}
+.pdf-hdr{background:#1a3d6e;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.pdf-hdr h3{color:white;font-size:14px;font-weight:800;}
+.pdf-btns{display:flex;gap:8px;align-items:center;}
+.pdf-close{background:rgba(255,255,255,0.2);border:none;color:white;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:700;}
+.pdf-dl{background:#22c55e;border:none;color:white;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;}
+.pdf-body{padding:24px;overflow-y:auto;flex:1;background:#f8f8f8;}
+.doc{background:white;max-width:620px;margin:0 auto;padding:32px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);font-size:12px;}
+.doc h1{font-size:20px;font-weight:900;color:#1a3d6e;margin-bottom:2px;}
+.doc .dsub{font-size:12px;color:#666;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid #1a3d6e;}
+.dsec{margin-bottom:16px;}
+.dsec h2{font-size:11px;font-weight:800;color:#1a3d6e;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #e5e7eb;}
+.dsec p{color:#333;line-height:1.6;margin-bottom:5px;}
+.dsec ul{padding-left:16px;}.dsec li{color:#333;line-height:1.7;}
+.dbr{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.dbl{width:150px;font-size:11px;color:#444;flex-shrink:0;}
+.dbb{flex:1;height:8px;background:#f0ede8;border-radius:4px;overflow:hidden;}
+.dbf{height:100%;border-radius:4px;}
+.dbs{font-size:11px;font-weight:800;width:28px;text-align:right;}
+.dbw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.dbd{background:#eef2f8;color:#1a3d6e;border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700;}
+.dft{margin-top:20px;padding-top:12px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;}
+.dft p{font-size:10px;color:#aaa;}
+@media(max-width:640px){
+  .journey-row,.stats-row,.alumni-stats{grid-template-columns:repeat(2,1fr);}
+  .track-grid,.ss-grid,.alumni-grid,.t-grid,.li-cta-row{grid-template-columns:1fr;}
+  .track-pills{gap:6px;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- HEADER -->
+<div class="header">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="logo">🎓</div>
+    <div><div class="org-name">Per Scholas STL</div><div class="org-sub">Employer Partner Portal</div></div>
+  </div>
+  <div class="year-badge">2026 Cohorts</div>
+</div>
+
+<!-- TRACK SELECTOR -->
+<div class="track-selector">
+  <div class="track-selector-label">SELECT A TRAINING TRACK TO FILTER THE DASHBOARD</div>
+  <div class="track-pills">
+    <div class="track-pill all active" onclick="selectTrack('all',this)">🔍 All Tracks</div>
+    <div class="track-pill" onclick="selectTrack('IT Support',this)">🖥️ AI-Enabled IT Support</div>
+    <div class="track-pill" onclick="selectTrack('Healthcare IT',this)">🏥 Healthcare IT</div>
+    <div class="track-pill" onclick="selectTrack('Cybersecurity',this)">🛡️ Cybersecurity</div>
+    <div class="track-pill" onclick="selectTrack('Data Analytics',this)">📊 Data Analytics</div>
+    <div class="track-pill" onclick="selectTrack('Data Center',this)">🏗️ Data Center Operations</div>
+    <div class="track-pill" onclick="selectTrack('AWS',this)">☁️ AWS Cloud</div>
+  </div>
+</div>
+
+<!-- ACTIVE TRACK BANNER -->
+<div class="active-track-banner" id="trackBanner">
+  <div>
+    <div class="atb-title" id="bannerTitle"></div>
+    <div style="font-size:11px;color:#555;margin-top:2px;" id="bannerDesc"></div>
+  </div>
+  <div class="atb-stats" id="bannerStats"></div>
+</div>
+
+<!-- TABS -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('pipeline')">👥 Talent Pipeline</button>
+  <button class="tab-btn" onclick="switchTab('powerskills')">⭐ Power Skills</button>
+  <button class="tab-btn" onclick="switchTab('alumni')">🌐 Alumni Network</button>
+</div>
+
+<!-- ===== TALENT PIPELINE ===== -->
+<div class="panel active" id="panel-pipeline">
+  <div class="sec-lbl">LEARNER JOURNEY — CLICK TO EXPAND</div>
+  <div class="journey-row">
+    <div class="jcard active" onclick="jd(0,this)"><div class="jcard-icon">🎓</div><div class="jcard-title">Hands-on Training</div><div class="jcard-sub">Technical skills &amp; certs</div></div>
+    <div class="jcard" onclick="jd(1,this)"><div class="jcard-icon">🤝</div><div class="jcard-title">Learner Support</div><div class="jcard-sub">Wellness &amp; success plans</div></div>
+    <div class="jcard" onclick="jd(2,this)"><div class="jcard-icon">💼</div><div class="jcard-title">Career Coaching</div><div class="jcard-sub">Mock interviews &amp; résumés</div></div>
+    <div class="jcard" onclick="jd(3,this)"><div class="jcard-icon">🔗</div><div class="jcard-title">Career Connections</div><div class="jcard-sub">850+ employer partners</div></div>
+  </div>
+  <div class="jdetail" id="jdetail">
+    <h3>Hands-on Training</h3>
+    <p>Your future hires earn industry-recognized certifications — <strong>CompTIA A+</strong>, Security+, AWS Cloud Practitioner, and AI-tool fluency — in 15-week full-time immersive programs at no cost to them. Per Scholas condenses the equivalent of an associate degree into 15 weeks. Curriculum is co-designed with employer partners and updated each cohort. Programs offered in remote, hybrid, and in-person formats.</p>
+  </div>
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-num" id="statCandidates">47</div><div class="stat-label">Candidates in training</div></div>
+    <div class="stat-card"><div class="stat-num" id="statTracks">6</div><div class="stat-label">Active training tracks</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#166534;" id="statReady">12</div><div class="stat-label">🟢 Interview-ready now</div></div>
+    <div class="stat-card"><div class="stat-num">82%</div><div class="stat-label">STL job placement rate</div></div>
+  </div>
+
+  <!-- UPCOMING TRACKS 2026 -->
+  <div class="upcoming-section">
+    <h3>📅 Upcoming Training Tracks — 2026 Schedule</h3>
+    <table class="track-table">
+      <thead><tr><th>Track</th><th>Start</th><th>End</th><th>Format</th></tr></thead>
+      <tbody>
+        <tr><td>🖥️ AI-Enabled IT Support</td><td>Mar 16</td><td>Jun 26</td><td><span class="mod-badge mod-ip">In-Person</span></td></tr>
+        <tr><td>🏥 Healthcare IT</td><td>Mar 30</td><td>Jul 21</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🛡️ Cybersecurity</td><td>Mar 30</td><td>Jul 21</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🏗️ Data Center Operations</td><td>Apr 6</td><td>Jul 24</td><td><span class="mod-badge mod-hy">Hybrid</span></td></tr>
+        <tr><td>☁️ AWS Cloud</td><td>Apr 13</td><td>Aug 4</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🖥️ AI-Enabled IT Support</td><td>Apr 20</td><td>Aug 11</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🏥 Healthcare IT</td><td>Aug 3</td><td>Nov 13</td><td><span class="mod-badge mod-hy">Hybrid</span></td></tr>
+        <tr><td>🛡️ Cybersecurity</td><td>Aug 3</td><td>Nov 18</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>📊 Data Analytics</td><td>Aug 3</td><td>Nov 18</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🏗️ Data Center Operations</td><td>Aug 10</td><td>Nov 20</td><td><span class="mod-badge mod-hy">Hybrid</span></td></tr>
+        <tr><td>🏥 Healthcare IT</td><td>Nov 30</td><td>Mar 26 '27</td><td><span class="mod-badge mod-hy">Hybrid</span></td></tr>
+        <tr><td>🛡️ Cybersecurity</td><td>Nov 30</td><td>Mar 26 '27</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+        <tr><td>🏗️ Data Center Operations</td><td>Dec 7</td><td>Apr 2 '27</td><td><span class="mod-badge mod-hy">Hybrid</span></td></tr>
+        <tr><td>🖥️ IT Support (TBD)</td><td>Dec 7</td><td>Apr 2 '27</td><td><span class="mod-badge mod-rm">Remote</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-lbl">CANDIDATE PIPELINE BY TRACK</div>
+  <div class="pipeline-controls">
+    <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search all candidates..." oninput="filterRows(this.value)"></div>
+    <div class="dropdown-wrap" id="ddWrap">
+      <button class="dropdown-btn" onclick="toggleDD()">📋 All Candidates ▾</button>
+      <div class="dropdown-menu" id="ddMenu"></div>
+    </div>
+  </div>
+
+  <div class="track-grid" id="trackGrid">
+    <div class="track-card" data-track="IT Support">
+      <div class="track-header"><div class="track-icon">🖥️</div><div class="track-name">AI-Enabled IT Support</div></div>
+      <div class="lrow clk" onclick="openCM('Jordan Miles')"><div class="av" style="background:#4f46e5">JM</div><span class="lname">Jordan Miles</span><span class="cb">A+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Aaliyah Brooks')"><div class="av" style="background:#0891b2">AB</div><span class="lname">Aaliyah Brooks</span><span class="cb">A+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Marcus Johnson')"><div class="av" style="background:#1d4ed8">MJ</div><span class="lname">Marcus Johnson</span><span class="cb">A+/Net+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Terrence Hall')"><div class="av" style="background:#7c3aed">TH</div><span class="lname">Terrence Hall</span><span class="tr-t">🔵 Week 8</span></div>
+      <div class="lrow clk" onclick="openCM('Monique Davis')"><div class="av" style="background:#be185d">MD</div><span class="lname">Monique Davis</span><span class="tr-t">🔵 Week 6</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+    <div class="track-card" data-track="Healthcare IT">
+      <div class="track-header"><div class="track-icon">🏥</div><div class="track-name">Healthcare IT Technician</div></div>
+      <div class="lrow clk" onclick="openCM('Simone Taylor')"><div class="av" style="background:#0d9488">ST</div><span class="lname">Simone Taylor</span><span class="cb">A+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Andre King')"><div class="av" style="background:#b45309">AK</div><span class="lname">Andre King</span><span class="cb">A+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Tanya Williams')"><div class="av" style="background:#059669">TW</div><span class="lname">Tanya Williams</span><span class="cb">A+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('David Okafor')"><div class="av" style="background:#dc2626">DO</div><span class="lname">David Okafor</span><span class="tr-t">🔵 Week 11</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+    <div class="track-card" data-track="Cybersecurity">
+      <div class="track-header"><div class="track-icon">🛡️</div><div class="track-name">Cybersecurity with AI Tools</div></div>
+      <div class="lrow clk" onclick="openCM('Keisha Grant')"><div class="av" style="background:#dc2626">KG</div><span class="lname">Keisha Grant</span><span class="cb">Sec+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Damon Pierce')"><div class="av" style="background:#92400e">DP</div><span class="lname">Damon Pierce</span><span class="cb">Sec+</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Lashonda Reeves')"><div class="av" style="background:#1d4ed8">LR</div><span class="lname">Lashonda Reeves</span><span class="aw-t">🟡 Cert Pending</span></div>
+      <div class="lrow clk" onclick="openCM('Carlos Mendez')"><div class="av" style="background:#7c3aed">CM</div><span class="lname">Carlos Mendez</span><span class="tr-t">🔵 Week 10</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+    <div class="track-card" data-track="Data Analytics">
+      <div class="track-header"><div class="track-icon">📊</div><div class="track-name">Data Analytics / AI Native BI</div></div>
+      <div class="lrow clk" onclick="openCM('Marcus Webb')"><div class="av" style="background:#059669">MW</div><span class="lname">Marcus Webb</span><span class="cb">BI</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Destiny Carr')"><div class="av" style="background:#6366f1">DC</div><span class="lname">Destiny Carr</span><span class="cb">BI</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Jaylen Foster')"><div class="av" style="background:#0369a1">JF</div><span class="lname">Jaylen Foster</span><span class="tr-t">🔵 Week 9</span></div>
+      <div class="lrow clk" onclick="openCM('Priya Nair')"><div class="av" style="background:#0d9488">PN</div><span class="lname">Priya Nair</span><span class="tr-t">🔵 Week 7</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+    <div class="track-card" data-track="Data Center">
+      <div class="track-header"><div class="track-icon">🏗️</div><div class="track-name">Data Center Operations</div></div>
+      <div class="lrow clk" onclick="openCM('Rashida Clark')"><div class="av" style="background:#be185d">RC</div><span class="lname">Rashida Clark</span><span class="aw-t">🟡 Cert Pending</span></div>
+      <div class="lrow clk" onclick="openCM('Isaiah Thomas')"><div class="av" style="background:#4f46e5">IT</div><span class="lname">Isaiah Thomas</span><span class="tr-t">🔵 Week 8</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+    <div class="track-card" data-track="AWS">
+      <div class="track-header"><div class="track-icon">☁️</div><div class="track-name">AWS Cloud / re:Start</div></div>
+      <div class="lrow clk" onclick="openCM('Brianna Scott')"><div class="av" style="background:#ea580c">BS</div><span class="lname">Brianna Scott</span><span class="cb">AWS</span><span class="ir-t">🟢 Ready</span></div>
+      <div class="lrow clk" onclick="openCM('Elijah Moore')"><div class="av" style="background:#0369a1">EM</div><span class="lname">Elijah Moore</span><span class="cb">AWS</span><span class="ir-t">🟢 Ready</span></div>
+      <span class="add-l">+ Add learner</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-p" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">🎯 Request Candidates — Per Scholas STL Talent Solutions</button>
+    <button class="btn btn-s" onclick="switchTab('powerskills')">⭐ View Power Skills</button>
+  </div>
+  <div style="margin-top:10px;font-size:10px;color:#aaa;">🟢 Interview-ready · click for full profile &nbsp;|&nbsp; 🔵 In training · click to view journey &nbsp;|&nbsp; 🟡 Awaiting certification</div>
+</div>
+
+<!-- ===== POWER SKILLS ===== -->
+<div class="panel" id="panel-powerskills">
+  <div class="ir-banner">
+    <span style="font-size:22px;flex-shrink:0;">🟢</span>
+    <div class="ir-banner-text"><strong>Power Skills profiles are available only for the 12 interview-ready candidates across all tracks.</strong> Each composite score is built from four independent sources — instructor observation, peer cohort ratings, learner self-assessment, and employer mock interview feedback. Select any interview-ready candidate below regardless of track — their track is displayed on their profile.</div>
+  </div>
+  <div class="ps-controls">
+    <select class="ps-select" onchange="loadPS(this.value)" id="psSelect">
+      <option value="">— Select any interview-ready candidate (all tracks) —</option>
+      <optgroup label="🖥️ AI-Enabled IT Support">
+        <option value="Jordan Miles">🟢 Jordan Miles</option>
+        <option value="Aaliyah Brooks">🟢 Aaliyah Brooks</option>
+        <option value="Marcus Johnson">🟢 Marcus Johnson</option>
+      </optgroup>
+      <optgroup label="🏥 Healthcare IT Technician">
+        <option value="Simone Taylor">🟢 Simone Taylor</option>
+        <option value="Andre King">🟢 Andre King</option>
+        <option value="Tanya Williams">🟢 Tanya Williams</option>
+      </optgroup>
+      <optgroup label="🛡️ Cybersecurity with AI Tools">
+        <option value="Keisha Grant">🟢 Keisha Grant</option>
+        <option value="Damon Pierce">🟢 Damon Pierce</option>
+      </optgroup>
+      <optgroup label="📊 Data Analytics / AI Native BI">
+        <option value="Marcus Webb">🟢 Marcus Webb</option>
+        <option value="Destiny Carr">🟢 Destiny Carr</option>
+      </optgroup>
+      <optgroup label="☁️ AWS Cloud / re:Start">
+        <option value="Brianna Scott">🟢 Brianna Scott</option>
+        <option value="Elijah Moore">🟢 Elijah Moore</option>
+      </optgroup>
+    </select>
+    <button class="btn btn-s" onclick="switchTab('pipeline')">← Talent Pipeline</button>
+  </div>
+  <div id="psContent" style="color:#aaa;text-align:center;padding:48px 20px;background:white;border-radius:10px;font-size:13px;">Select a candidate above to view their full Power Skills profile.</div>
+</div>
+
+<!-- ===== ALUMNI NETWORK ===== -->
+<div class="panel" id="panel-alumni">
+  <div class="alumni-stats">
+    <div class="a-stat"><div class="a-stat-num">400+</div><div class="a-stat-label">STL Graduates since 2022</div></div>
+    <div class="a-stat"><div class="a-stat-num">82%</div><div class="a-stat-label">Employer Placement Rate</div></div>
+    <div class="a-stat"><div class="a-stat-num">82%</div><div class="a-stat-label">Graduation Rate</div></div>
+    <div class="a-stat"><div class="a-stat-num">3×</div><div class="a-stat-label">Avg. Pre-Training Wage Gain</div></div>
+  </div>
+  <div class="li-cta-row">
+    <div class="li-cta blue">
+      <div><h3>📋 Per Scholas STL — Official LinkedIn Page</h3><p>Follow the official Per Scholas St. Louis page for cohort announcements, new graduate spotlights, employer hiring events, and program updates. Stay ahead of the talent pipeline.</p></div>
+      <a class="li-cta-btn" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View Per Scholas STL on LinkedIn →</a>
+    </div>
+    <div class="li-cta navy">
+      <div><h3>🎓 Per Scholas STL Alumni Group</h3><p>Connect directly with Per Scholas STL graduates by cohort, track, and current employer. This exclusive alumni LinkedIn group for STL grads is coming soon — be the first to join.</p></div>
+      <a class="li-cta-btn" href="https://www.linkedin.com/groups/per-scholas-stl-alumni" target="_blank">Join STL Alumni Group — Coming Soon →</a>
+    </div>
+  </div>
+  <div class="sec-lbl" style="margin-bottom:8px;">FEATURED ALUMNI NOW IN YOUR TALENT MARKET</div>
+  <div class="alumni-grid">
+    <div class="alumni-card"><div class="a-av" style="background:#0891b2">TR</div><div><div class="a-name">Tyrese Robinson</div><div class="a-role">IT Help Desk Analyst</div><div class="a-emp">BJC HealthCare</div><div class="a-track">AI-Enabled IT Support · Fall 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#059669">NW</div><div><div class="a-name">Naomi Washington</div><div class="a-role">Cloud Support Associate</div><div class="a-emp">TEKsystems</div><div class="a-track">AWS Cloud · Spring 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#dc2626">DJ</div><div><div class="a-name">Darius Jenkins</div><div class="a-role">Cybersecurity Analyst I</div><div class="a-emp">AT&amp;T</div><div class="a-track">Cybersecurity · Summer 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#7c3aed">KM</div><div><div class="a-name">Kiera Mitchell</div><div class="a-role">Data Analyst</div><div class="a-emp">Charter Communications</div><div class="a-track">Data Analytics · Fall 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#b45309">MA</div><div><div class="a-name">Marcus Ashford</div><div class="a-role">Healthcare IT Support Specialist</div><div class="a-emp">Schnucks</div><div class="a-track">Healthcare IT · Spring 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#1d4ed8">LP</div><div><div class="a-name">Latoya Pierce</div><div class="a-role">IT Support Technician</div><div class="a-emp">UKG</div><div class="a-track">AI-Enabled IT Support · Summer 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#0d9488">JB</div><div><div class="a-name">Jerome Bell</div><div class="a-role">Data Center Technician</div><div class="a-emp">Barry-Wehmiller Companies</div><div class="a-track">Data Center Operations · Fall 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+    <div class="alumni-card"><div class="a-av" style="background:#ea580c">SC</div><div><div class="a-name">Shanice Coleman</div><div class="a-role">Network Support Analyst</div><div class="a-emp">NCR Atleos</div><div class="a-track">AI-Enabled IT Support · Spring 2025</div><a class="li-pb" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">View on LinkedIn</a></div></div>
+  </div>
+  <div class="sec-lbl" style="margin-bottom:8px;">WHAT EMPLOYER PARTNERS SAY</div>
+  <div class="t-grid">
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"Per Scholas STL graduates come in certified, prepared, and ready to contribute from day one. We've built a reliable pipeline with them and continue to grow it — the caliber of candidates is consistently high."</div><div class="t-attr">IT Talent Acquisition Manager</div><div class="t-co">BJC HealthCare — St. Louis, MO</div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"We needed candidates who could hit the ground running in a fast-paced technical environment. Per Scholas STL delivered exactly that. Their graduates understand the work, communicate well, and adapt quickly."</div><div class="t-attr">Director of Technology Staffing</div><div class="t-co">TEKsystems — St. Louis, MO</div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"The professionalism and technical readiness of Per Scholas STL grads has genuinely impressed our team. We've made multiple hires and every one of them has exceeded expectations in their first 90 days."</div><div class="t-attr">Senior Hiring Manager, Network Operations</div><div class="t-co">AT&amp;T — Greater St. Louis</div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"What makes Per Scholas grads stand out isn't just the certifications — it's the whole package. They're reliable, driven, and they bring a work ethic that you can't teach in a classroom. We keep coming back."</div><div class="t-attr">Workforce Development Lead</div><div class="t-co">Charter Communications — St. Louis, MO</div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"Per Scholas STL has become one of our most trusted talent sources. The graduates we've hired have grown quickly into key contributors. It's a partnership that delivers real results for our IT teams."</div><div class="t-attr">VP of Human Resources</div><div class="t-co">Schnucks — St. Louis, MO</div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><div class="t-quote">"We partnered with Per Scholas STL because we needed diverse, skilled tech talent — and they delivered. The quality of training, the candidates' readiness, and the Talent Solutions support have all been outstanding."</div><div class="t-attr">Director of IT Operations</div><div class="t-co">Keeley Companies — St. Louis, MO</div></div>
+  </div>
+  <div class="t-cta">
+    <div class="t-cta-text"><h3>Share Your Organization's Story</h3><p>Are you a Per Scholas STL employer partner? We'd love to feature your experience. Contact our Talent Solutions team to share your testimonial.</p></div>
+    <button class="btn" style="background:white;color:#1a3d6e;white-space:nowrap;flex-shrink:0;" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">📩 Share Your Story</button>
+  </div>
+  <div class="actions" style="margin-top:14px;">
+    <button class="btn btn-p" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">🎯 Start Hiring — Per Scholas STL Talent Solutions</button>
+    <a class="btn btn-li" href="https://www.linkedin.com/showcase/per-scholas-st-louis" target="_blank">Per Scholas STL on LinkedIn</a>
+  </div>
+</div>
+</div>
+
+<!-- Candidate Modal -->
+<div class="overlay" id="cmOv"><div class="modal"><div class="modal-hdr"><h2 id="cm-title">Candidate</h2><button class="modal-close" onclick="closeCM()">✕</button></div><div class="modal-body" id="cm-body"></div></div></div>
+
+<!-- PDF Overlay -->
+<div class="pdf-overlay" id="pdfOv">
+  <div class="pdf-modal">
+    <div class="pdf-hdr"><h3 id="pdf-title">Document</h3><div class="pdf-btns"><button class="pdf-dl" onclick="printDoc()">⬇ Download PDF</button><button class="pdf-close" onclick="closePDF()">✕ Close</button></div></div>
+    <div class="pdf-body" id="pdf-body"></div>
+  </div>
+</div>
+
+<script>
+// ===== TRACK CONFIG =====
+const TRACK_INFO = {
+  'all':          {label:'All Tracks',desc:'Showing all active training tracks for 2026.',candidates:47,ready:12,tracks:6},
+  'IT Support':   {label:'AI-Enabled IT Support',desc:'CompTIA A+, Network+, Google IT Support Professional, AI diagnostics. In-person & remote options.',candidates:5,ready:3,tracks:1},
+  'Healthcare IT':{label:'Healthcare IT Technician',desc:'CompTIA A+, Epic EHR, HIPAA Compliance. Hybrid & remote options. Partners include BJC HealthCare.',candidates:4,ready:3,tracks:1},
+  'Cybersecurity':{label:'Cybersecurity with AI Tools',desc:'CompTIA Security+, Splunk Core, AI Threat Detection. Remote format. Partners include Accenture, WWT.',candidates:4,ready:2,tracks:1},
+  'Data Analytics':{label:'Data Analytics / AI Native BI',desc:'Power BI, SQL, Python, Data Visualization. Remote format. Starts Aug 3.',candidates:4,ready:2,tracks:1},
+  'Data Center':  {label:'Data Center Operations',desc:'OSHA 10-Hour, CompTIA A+, NFPA 70E. Hybrid format. Multiple cohorts throughout 2026.',candidates:2,ready:0,tracks:1},
+  'AWS':          {label:'AWS Cloud / re:Start',desc:'AWS Cloud Practitioner, Python, Linux. Remote format. Partners include TEKsystems.',candidates:2,ready:2,tracks:1}
+};
+
+let activeTrack = 'all';
+
+function selectTrack(track, el) {
+  activeTrack = track;
+  document.querySelectorAll('.track-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const info = TRACK_INFO[track];
+  const banner = document.getElementById('trackBanner');
+  if (track === 'all') {
+    banner.classList.remove('show');
+  } else {
+    banner.classList.add('show');
+    document.getElementById('bannerTitle').textContent = info.label;
+    document.getElementById('bannerDesc').textContent = info.desc;
+    document.getElementById('bannerStats').innerHTML = `
+      <div class="atb-stat"><div class="atb-num">${info.candidates}</div><div class="atb-lbl">In training</div></div>
+      <div class="atb-stat"><div class="atb-num" style="color:#166534;">${info.ready}</div><div class="atb-lbl">Interview-ready</div></div>`;
+  }
+  // Filter track cards
+  document.querySelectorAll('.track-card').forEach(card => {
+    if (track === 'all' || card.dataset.track === track) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+  // Update stats
+  document.getElementById('statCandidates').textContent = info.candidates;
+  document.getElementById('statTracks').textContent = info.tracks === 1 ? '1' : '6';
+  document.getElementById('statReady').textContent = info.ready;
+  // Update PS dropdown filter
+  updatePSDropdown(track);
+}
+
+function updatePSDropdown(track) {
+  const sel = document.getElementById('psSelect');
+  const opts = sel.querySelectorAll('option,optgroup');
+  if (track === 'all') {
+    opts.forEach(o => o.style.display = '');
+  } else {
+    const trackMap = {
+      'IT Support': 'AI-Enabled IT Support',
+      'Healthcare IT': 'Healthcare IT Technician',
+      'Cybersecurity': 'Cybersecurity with AI Tools',
+      'Data Analytics': 'Data Analytics',
+      'Data Center': 'Data Center',
+      'AWS': 'AWS Cloud'
+    };
+    const label = trackMap[track] || '';
+    sel.querySelectorAll('optgroup').forEach(og => {
+      og.style.display = og.label.includes(label.split(' ')[0]) || track === 'all' ? '' : 'none';
+    });
+  }
+}
+
+// ===== JOURNEY DETAILS =====
+const JDS = [
+  {h:'Hands-on Training',b:'Your future hires earn industry-recognized certifications — <strong>CompTIA A+</strong>, Security+, AWS Cloud Practitioner, and AI-tool fluency — in 15-week full-time immersive programs at no cost. Per Scholas condenses the equivalent of an associate degree into 15 weeks. Programs run in-person, remote, and hybrid formats. Curriculum is co-designed with employer partners each cohort.'},
+  {h:'Learner Support',b:'Per Scholas STL removes every barrier between a learner and graduation. Learn more at <a href="https://perscholas.org/locations/st-louis/" target="_blank" style="color:#1a3d6e;font-weight:700;">perscholas.org/locations/st-louis</a>. Support includes:<ul><li>Financial wellness coaching and emergency funding</li><li>Zero-interest Ascent loans to cover living expenses during training</li><li>Transportation assistance and loaner equipment provided</li><li>Free mental health counseling and wellness support</li><li>No prior experience required — learners must be 18+ with a high school diploma or equivalent</li></ul>The result is a focused, resilient candidate when they reach your door.'},
+  {h:'Career Coaching & Power Skills',b:'Per Scholas STL builds <strong>"power skills"</strong> — communication, adaptability, professionalism, and problem-solving — through hands-on labs, mock interviews, guest speakers, and employer engagement throughout the program. Top Guest Speaker &amp; Mock Interview Partners include:<ul><li>Accenture</li><li>Gadellnet</li><li>Graybar</li><li>Schnucks</li><li>Nestlé IT Digital Americas</li><li>Enterprise Mobility</li><li>World Wide Technology (WWT)</li><li>Mastercard</li><li>...and more industry leaders</li></ul>Power Skills scores are tracked across four sources and viewable for all interview-ready candidates in the Power Skills tab.'},
+  {h:'Career Connections',b:'Per Scholas STL connects graduates directly to top regional employers. <strong>Employers actively hiring Per Scholas STL graduates include:</strong><ul><li>HomeWav</li><li>Charter Communications</li><li>BJC HealthCare</li><li>AT&amp;T</li><li>TEKsystems</li><li>St. Louis Community College</li><li>Schnucks</li><li>NCR Atleos</li><li>Keeley Companies</li><li>ISPN Network Services</li><li>Intercard Inc.</li><li>CBIZ</li><li>Barry-Wehmiller Companies</li><li>UKG</li><li>...and many more regional and national partners</li></ul>As an employer partner, you gain priority access to interview-ready candidates and dedicated Talent Solutions support. If a hire doesn\'t work out within 90 days, Talent Solutions Plus provides additional matching at no cost.'}
+];
+function jd(i, el) {
+  document.querySelectorAll('.jcard').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('jdetail').innerHTML = `<h3>${JDS[i].h}</h3><p>${JDS[i].b}</p>`;
+}
+
+function switchTab(t) {
+  ['pipeline','powerskills','alumni'].forEach((id,i) => {
+    document.querySelectorAll('.tab-btn')[i].classList.toggle('active', id===t);
+    document.getElementById('panel-'+id).classList.toggle('active', id===t);
+  });
+}
+function filterRows(v) {
+  v = v.toLowerCase();
+  document.querySelectorAll('.lrow').forEach(r => {
+    const nm = r.querySelector('.lname');
+    if (nm) r.style.display = nm.textContent.toLowerCase().includes(v) ? '' : 'none';
+  });
+}
+function toggleDD() { document.getElementById('ddMenu').classList.toggle('open'); }
+document.addEventListener('click', e => { if (!document.getElementById('ddWrap').contains(e.target)) document.getElementById('ddMenu').classList.remove('open'); });
+
+// ===== CANDIDATE DATA =====
+const CD = {
+"Jordan Miles":{t:"AI-Enabled IT Support",s:"ir",c:["CompTIA A+","Google IT Support","AI Tools Fundamentals"],i:"JM",col:"#4f46e5",w:15,comp:90,
+  sc:{ins:{Communication:88,ProblemSolving:92,Professionalism:85,Adaptability:90},peer:{Collaboration:94,Dependability:91,PositiveAttitude:96,ActiveListening:89},self:{TimeManagement:78,Confidence:82,Initiative:86,GrowthMindset:95},emp:{PresencePoise:87,AnswerClarity:84,CulturalFit:91,ThoughtfulQuestions:89}},
+  iN:'"Strong ownership under pressure; actively supports peers. One of the most well-rounded communicators in the cohort." — Instructor Zell Davis',
+  pN:"Consistently named go-to resource when peers are stuck. High collaborative dependability.",
+  sN:"Self-identifies time management as growth area — signals strong coachability from day one.",
+  eN:'"Would advance to final round without hesitation. Composed, curious, excellent follow-up questions." — Employer Evaluator',
+  sum:"Jordan brings CompTIA A+ certification, strong AI tool fluency, and a collaborative mindset highly regarded by peers and instructors.",
+  res:{obj:"Motivated IT Support professional with CompTIA A+ and AI tools training, seeking a Help Desk or IT Support Specialist role in St. Louis.",
+  exp:[{r:"Helpdesk Intern",co:"St. Louis Community College IT Dept.",p:"Jan 2025–Apr 2025",b:["Resolved 30+ Tier-1 tickets daily via ServiceNow","Configured Windows workstations and imaged devices","Documented recurring issues to build internal knowledge base"]}],
+  ed:"Per Scholas STL — AI-Enabled IT Support (2026)",sk:["CompTIA A+","Windows 10/11","Active Directory","ServiceNow","AI-assisted diagnostics","TCP/IP","Customer service"]}},
+
+"Aaliyah Brooks":{t:"AI-Enabled IT Support",s:"ir",c:["CompTIA A+","Help Desk Support"],i:"AB",col:"#0891b2",w:15,comp:86,
+  sc:{ins:{Communication:82,ProblemSolving:86,Professionalism:90,Adaptability:84},peer:{Collaboration:88,Dependability:92,PositiveAttitude:90,ActiveListening:86},self:{TimeManagement:85,Confidence:79,Initiative:82,GrowthMindset:91},emp:{PresencePoise:84,AnswerClarity:80,CulturalFit:88,ThoughtfulQuestions:85}},
+  iN:'"Aaliyah brings exceptional professionalism. Her punctuality and preparation set the tone for the cohort." — Instructor Chris McCain',
+  pN:"Rated highest in dependability — peers know they can count on her every time.",
+  sN:"Honest about building confidence in live settings. Responded well to mock interview coaching.",
+  eN:'"Polished, professional, and thoughtful. Well-suited for client-facing IT support." — Employer Evaluator',
+  sum:"Aaliyah is a consistently professional candidate with top dependability scores and a strong customer-first orientation.",
+  res:{obj:"Detail-oriented Help Desk professional with CompTIA A+, seeking an IT Support role delivering exceptional user experiences.",
+  exp:[{r:"Customer Service Representative",co:"Schnucks Supermarkets",p:"2022–2024",b:["Managed 100+ customer interactions daily","Maintained 95% satisfaction scores","Trained 3 new team members on POS systems"]}],
+  ed:"Per Scholas STL — AI-Enabled IT Support (2026)",sk:["CompTIA A+","Ticket management","Windows OS","Remote desktop support","Customer communication","ITIL fundamentals"]}},
+
+"Marcus Johnson":{t:"AI-Enabled IT Support",s:"ir",c:["CompTIA A+","CompTIA Network+","Google IT Support Professional"],i:"MJ",col:"#1d4ed8",w:15,comp:88,
+  sc:{ins:{Communication:87,ProblemSolving:89,Professionalism:87,Adaptability:91},peer:{Collaboration:89,Dependability:90,PositiveAttitude:92,ActiveListening:88},self:{TimeManagement:84,Confidence:83,Initiative:86,GrowthMindset:93},emp:{PresencePoise:86,AnswerClarity:87,CulturalFit:88,ThoughtfulQuestions:90}},
+  iN:'"Marcus earned A+ and Network+ and consistently demonstrated above-average diagnostic speed in every lab." — Instructor Zell Davis',
+  pN:"Calm, encouraging presence. Peers trust his technical judgment above all others in the cohort.",
+  sN:"Identifies network administration specialization as his clear next goal.",
+  eN:'"Dual-certified and polished. The depth of his network troubleshooting impressed our entire panel." — Employer Evaluator',
+  sum:"Marcus holds dual CompTIA certifications (A+ and Network+) and stands out for technical depth and clear career direction.",
+  res:{obj:"Dual-certified IT professional (CompTIA A+ and Network+) seeking a Tier 2 Support or Junior Network Administrator role.",
+  exp:[{r:"Field Service Technician",co:"Lumen Technologies",p:"2022–2024",b:["Installed and maintained fiber network equipment at 200+ locations","Diagnosed Layer 1–3 network faults","Maintained 98% on-time service completion rate"]}],
+  ed:"Per Scholas STL — AI-Enabled IT Support (2026)",sk:["CompTIA A+ & Network+","Google IT Support Professional","LAN/WAN","Cisco IOS basics","Active Directory","Fiber optic fundamentals","ServiceNow"]}},
+
+"Simone Taylor":{t:"Healthcare IT Technician",s:"ir",c:["CompTIA A+","EHR Systems (Epic)","HIPAA Compliance"],i:"ST",col:"#0d9488",w:15,comp:88,
+  sc:{ins:{Communication:86,ProblemSolving:88,Professionalism:92,Adaptability:86},peer:{Collaboration:90,Dependability:93,PositiveAttitude:91,ActiveListening:88},self:{TimeManagement:86,Confidence:84,Initiative:82,GrowthMindset:90},emp:{PresencePoise:86,AnswerClarity:84,CulturalFit:92,ThoughtfulQuestions:87}},
+  iN:'"Simone\'s professionalism in clinical simulations was outstanding. Her HIPAA knowledge is deep and practical." — Instructor',
+  pN:"Most dependable member of the Healthcare IT cohort — consistently delivers on every commitment.",
+  sN:"High growth mindset around emerging EHR platforms. Targeting Epic Certification next.",
+  eN:'"Would fit seamlessly into any healthcare IT environment. HIPAA understanding is exceptional." — BJC Evaluator',
+  sum:"Simone combines CompTIA A+ with practical HIPAA knowledge and Epic EHR fluency — a strong match for healthcare systems.",
+  res:{obj:"Healthcare IT professional with CompTIA A+ and HIPAA expertise, seeking an IT Support role within a healthcare system.",
+  exp:[{r:"Patient Services Representative",co:"BJC HealthCare — Outpatient Center",p:"2021–2024",b:["Managed EHR data entry across Epic for 80+ daily patients","Ensured HIPAA-compliant handling of all patient records","Coordinated IT support tickets for clinical staff"]}],
+  ed:"Per Scholas STL — Healthcare IT Technician (2026)",sk:["CompTIA A+","Epic EHR","HIPAA compliance","Help Desk support","Windows environment","Patient data management","Healthcare workflows"]}},
+
+"Andre King":{t:"Healthcare IT Technician",s:"ir",c:["CompTIA A+","EHR Systems"],i:"AK",col:"#b45309",w:15,comp:85,
+  sc:{ins:{Communication:84,ProblemSolving:86,Professionalism:88,Adaptability:84},peer:{Collaboration:86,Dependability:87,PositiveAttitude:88,ActiveListening:85},self:{TimeManagement:83,Confidence:80,Initiative:79,GrowthMindset:88},emp:{PresencePoise:83,AnswerClarity:82,CulturalFit:86,ThoughtfulQuestions:84}},
+  iN:'"Andre has a calm, patient demeanor ideal for clinical IT environments. His troubleshooting methodology is solid." — Instructor',
+  pN:"Steady, no-drama approach. Peers go to him for a careful second opinion.",
+  sN:"Identifies initiative as a growth area. Showed significant improvement in proactively raising questions.",
+  eN:'"Reliable, methodical, and professional. Strong fit for healthcare IT support." — Employer Evaluator',
+  sum:"Andre brings CompTIA A+ and EHR system skills with a calm approach well-suited to clinical IT environments.",
+  res:{obj:"Healthcare IT Support professional with CompTIA A+ and EHR experience, seeking a Technical Support role in a clinical setting.",
+  exp:[{r:"Medical Records Clerk",co:"SSM Health — St. Louis",p:"2022–2024",b:["Digitized and indexed paper records into EHR system","Resolved basic workstation issues for clinical staff","Maintained HIPAA compliance across all record handling"]}],
+  ed:"Per Scholas STL — Healthcare IT Technician (2026)",sk:["CompTIA A+","EHR systems","HIPAA fundamentals","Workstation support","Windows OS","Patient record management"]}},
+
+"Tanya Williams":{t:"Healthcare IT Technician",s:"ir",c:["CompTIA A+","EHR Systems (Epic)","HIPAA Compliance"],i:"TW",col:"#059669",w:15,comp:89,
+  sc:{ins:{Communication:88,ProblemSolving:87,Professionalism:93,Adaptability:88},peer:{Collaboration:91,Dependability:90,PositiveAttitude:92,ActiveListening:89},self:{TimeManagement:87,Confidence:85,Initiative:84,GrowthMindset:92},emp:{PresencePoise:88,AnswerClarity:86,CulturalFit:91,ThoughtfulQuestions:88}},
+  iN:'"Tanya brings warmth and professionalism that reflects exactly what healthcare IT environments need." — Instructor',
+  pN:"Natural team anchor in the Healthcare IT track. Consistently high ratings across all categories.",
+  sN:"Cites Epic Certification as her targeted next professional milestone.",
+  eN:'"Tanya clearly understands the human side of healthcare IT. We would hire her without hesitation." — BJC Evaluator',
+  sum:"Tanya is the highest professionalism scorer in her track with both HIPAA expertise and a compassionate patient-centered approach.",
+  res:{obj:"Compassionate Healthcare IT professional with CompTIA A+ and HIPAA expertise, seeking a clinical IT support role.",
+  exp:[{r:"Certified Nursing Assistant",co:"St. Luke's Hospital",p:"2020–2023",b:["Worked alongside clinical IT staff during EHR system transitions","Documented patient care data in Epic daily","Assisted with tech onboarding for 10 new nursing staff members"]}],
+  ed:"Per Scholas STL — Healthcare IT Technician (2026)",sk:["CompTIA A+","Epic EHR","HIPAA compliance","Clinical IT support","Patient communication","Process documentation"]}},
+
+"Keisha Grant":{t:"Cybersecurity with AI Tools",s:"ir",c:["CompTIA Security+","Splunk Core Certified","AI Threat Detection"],i:"KG",col:"#dc2626",w:15,comp:93,
+  sc:{ins:{Communication:92,ProblemSolving:96,Professionalism:91,Adaptability:93},peer:{Collaboration:90,Dependability:94,PositiveAttitude:91,ActiveListening:92},self:{TimeManagement:90,Confidence:88,Initiative:93,GrowthMindset:95},emp:{PresencePoise:92,AnswerClarity:95,CulturalFit:90,ThoughtfulQuestions:94}},
+  iN:'"Keisha is the most analytically rigorous learner I have taught here. Her threat modeling was exceptional." — Instructor',
+  pN:"Unanimously the anchor of the cybersecurity cohort — strong, reliable, deeply knowledgeable.",
+  sN:"High across all dimensions. Cites cloud security specialization as her next goal.",
+  eN:'"Strongest cybersecurity candidate I have evaluated from any program. Ready for a junior SOC role today." — Evaluator',
+  sum:"Keisha is an exceptional cybersecurity candidate — Security+, Splunk Core certified, AI threat detection trained.",
+  res:{obj:"CompTIA Security+ and Splunk Core certified professional seeking a SOC Analyst or Cybersecurity Analyst role.",
+  exp:[{r:"IT Help Desk Technician",co:"Washington University in St. Louis",p:"2023–2024",b:["Monitored network access logs and flagged anomalous activity","Assisted with endpoint security updates across 200+ devices","Participated in tabletop security incident response exercises"]}],
+  ed:"Per Scholas STL — Cybersecurity with AI Tools (2026)",sk:["CompTIA Security+","Splunk Core","SIEM fundamentals","AI threat detection","Network security","Vulnerability scanning","Incident response"]}},
+
+"Damon Pierce":{t:"Cybersecurity with AI Tools",s:"ir",c:["CompTIA Security+","Splunk Core"],i:"DP",col:"#92400e",w:15,comp:87,
+  sc:{ins:{Communication:86,ProblemSolving:90,Professionalism:85,Adaptability:89},peer:{Collaboration:87,Dependability:88,PositiveAttitude:86,ActiveListening:90},self:{TimeManagement:82,Confidence:84,Initiative:85,GrowthMindset:90},emp:{PresencePoise:85,AnswerClarity:88,CulturalFit:87,ThoughtfulQuestions:88}},
+  iN:'"Damon has a methodical approach to threat analysis that would serve any SOC team well." — Instructor',
+  pN:"Calm under pressure — peers turn to Damon when lab scenarios get stressful.",
+  sN:"Cites time management as an area of growth. Responded positively to structured study plans.",
+  eN:'"Steady, technically sound, and thoughtful. A reliable Level 1 security analyst hire." — Evaluator',
+  sum:"Damon is a methodical cybersecurity professional with Security+ and Splunk credentials for a Level 1 SOC role.",
+  res:{obj:"Security+ and Splunk certified professional seeking a SOC Analyst or Security Operations role.",
+  exp:[{r:"Network Support Intern",co:"US Army Reserve — IT Unit",p:"2022–2023",b:["Monitored network infrastructure for a 300-person installation","Assisted with access control and credentialing procedures","Supported incident documentation and review processes"]}],
+  ed:"Per Scholas STL — Cybersecurity with AI Tools (2026)",sk:["CompTIA Security+","Splunk Core","Log analysis","Network monitoring","Access control","NIST frameworks"]}},
+
+"Marcus Webb":{t:"Data Analytics / AI Native BI",s:"ir",c:["Power BI","SQL","Python Basics"],i:"MW",col:"#059669",w:14,comp:91,
+  sc:{ins:{Communication:90,ProblemSolving:94,Professionalism:88,Adaptability:92},peer:{Collaboration:91,Dependability:89,PositiveAttitude:93,ActiveListening:91},self:{TimeManagement:88,Confidence:86,Initiative:90,GrowthMindset:92},emp:{PresencePoise:90,AnswerClarity:92,CulturalFit:89,ThoughtfulQuestions:93}},
+  iN:'"Marcus has a natural aptitude for translating data into decisions. His SQL work exceeded expectations." — Instructor',
+  pN:"Peers rate him highly for initiative and bringing structure to group projects.",
+  sN:"Identifies data storytelling as an area to deepen further.",
+  eN:'"Asked the most informed strategic follow-up questions of any candidate I have interviewed." — Evaluator',
+  sum:"Marcus combines strong SQL and Power BI skills with natural business acumen and leadership.",
+  res:{obj:"Analytical BI professional with Power BI and SQL expertise, seeking a Data Analyst or BI role.",
+  exp:[{r:"Sales Associate / Inventory Analyst",co:"Target Corp.",p:"2021–2024",b:["Analyzed weekly inventory discrepancies using Excel pivot tables","Built dashboards tracking shrink KPIs","Identified $12K in recoverable inventory loss"]}],
+  ed:"Per Scholas STL — Data Analytics / AI Native BI (2026)",sk:["Power BI","SQL","Python (Pandas)","Excel advanced","DAX","Data visualization","ETL basics"]}},
+
+"Destiny Carr":{t:"Data Analytics / AI Native BI",s:"ir",c:["Power BI","Excel Advanced"],i:"DC",col:"#6366f1",w:14,comp:84,
+  sc:{ins:{Communication:84,ProblemSolving:82,Professionalism:86,Adaptability:88},peer:{Collaboration:86,Dependability:84,PositiveAttitude:89,ActiveListening:87},self:{TimeManagement:80,Confidence:76,Initiative:78,GrowthMindset:90},emp:{PresencePoise:82,AnswerClarity:80,CulturalFit:86,ThoughtfulQuestions:82}},
+  iN:'"Destiny\'s Excel work is outstanding — among the best in the cohort." — Instructor',
+  pN:"Precise teammate who consistently elevates the quality of group deliverables.",
+  sN:"Self-identifies confidence as the primary growth area. Made notable improvement across sessions.",
+  eN:'"Solid technical base. With continued executive presence coaching, a very promising BI analyst." — Evaluator',
+  sum:"Destiny is a technically precise analyst with standout Excel skills and growing data storytelling ability.",
+  res:{obj:"BI professional with Power BI and Excel expertise, seeking a junior BI Analyst role.",
+  exp:[{r:"Administrative Assistant",co:"St. Louis County Government",p:"2022–2024",b:["Maintained Excel databases tracking 500+ case files","Generated monthly summary reports for department leadership","Coordinated data cleanup projects across three departments"]}],
+  ed:"Per Scholas STL — Data Analytics / AI Native BI (2026)",sk:["Power BI","Excel advanced","SQL basics","Data cleaning","Reporting dashboards","Attention to detail"]}},
+
+"Brianna Scott":{t:"AWS Cloud / re:Start",s:"ir",c:["AWS Cloud Practitioner","Python Basics","Linux Fundamentals"],i:"BS",col:"#ea580c",w:14,comp:87,
+  sc:{ins:{Communication:86,ProblemSolving:90,Professionalism:84,Adaptability:92},peer:{Collaboration:88,Dependability:86,PositiveAttitude:90,ActiveListening:87},self:{TimeManagement:84,Confidence:82,Initiative:88,GrowthMindset:93},emp:{PresencePoise:84,AnswerClarity:86,CulturalFit:87,ThoughtfulQuestions:91}},
+  iN:'"Brianna\'s cloud architecture labs were among the strongest in the cohort. She thinks in systems naturally." — Instructor',
+  pN:"Often completes extra labs and shares resources with the group before being asked.",
+  sN:"Exceptionally high growth mindset. Eager to pursue AWS Solutions Architect next.",
+  eN:'"Asked the most informed cloud-specific follow-up questions of any candidate in this program." — Cloud Evaluator',
+  sum:"Brianna is an AWS Cloud Practitioner with natural systems thinking and high drive to grow in the cloud space.",
+  res:{obj:"AWS Cloud Practitioner seeking a Cloud Support Associate or Junior Cloud Engineer role.",
+  exp:[{r:"Technical Support Representative",co:"Charter Communications",p:"2021–2024",b:["Resolved 60+ escalated technical support cases daily","Diagnosed network and ISP infrastructure issues remotely","Coached customers through router configuration steps"]}],
+  ed:"Per Scholas STL — AWS Cloud / re:Start (2026)",sk:["AWS Cloud Practitioner","Python basics","Linux CLI","EC2 / S3 / IAM","Cloud networking","Bash scripting"]}},
+
+"Elijah Moore":{t:"AWS Cloud / re:Start",s:"ir",c:["AWS Cloud Practitioner","Linux Fundamentals"],i:"EM",col:"#0369a1",w:14,comp:83,
+  sc:{ins:{Communication:82,ProblemSolving:86,Professionalism:82,Adaptability:86},peer:{Collaboration:84,Dependability:83,PositiveAttitude:84,ActiveListening:85},self:{TimeManagement:79,Confidence:78,Initiative:80,GrowthMindset:88},emp:{PresencePoise:81,AnswerClarity:83,CulturalFit:84,ThoughtfulQuestions:85}},
+  iN:'"Elijah significantly improved his Linux competency across the course. Solid cloud fundamentals." — Instructor',
+  pN:"Dependable and consistent. Peers note his willingness to stay late to work through labs.",
+  sN:"Made measurable improvement each week in verbal presentation skills.",
+  eN:'"Good foundational knowledge. With continued growth in confidence, a strong cloud support candidate." — Cloud Evaluator',
+  sum:"Elijah holds AWS Cloud Practitioner certification with strong Linux fundamentals and a consistent growth trajectory.",
+  res:{obj:"AWS Cloud Practitioner with Linux fundamentals seeking a Cloud Support or entry-level DevOps role.",
+  exp:[{r:"Warehouse Operations Associate",co:"Amazon Fulfillment — St. Peters, MO",p:"2022–2024",b:["Operated inventory tracking systems and resolved discrepancies","Trained on internal logistics software within first week","Identified process improvement saving team 45 min per shift"]}],
+  ed:"Per Scholas STL — AWS Cloud / re:Start (2026)",sk:["AWS Cloud Practitioner","Linux CLI","EC2 / S3","Cloud networking basics","Python fundamentals","Process improvement"]}},
+
+// In-training
+"Terrence Hall":{t:"AI-Enabled IT Support",s:"training",i:"TH",col:"#7c3aed",w:8,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Cert Prep",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"CompTIA A+ Domain 3: Hardware",est:"June 2026",cert:"CompTIA A+"}},
+"Monique Davis":{t:"AI-Enabled IT Support",s:"training",i:"MD",col:"#be185d",w:6,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Cert Prep",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"CompTIA A+ Domain 1: Mobile Devices",est:"June 2026",cert:"CompTIA A+"}},
+"David Okafor":{t:"Healthcare IT Technician",s:"training",i:"DO",col:"#dc2626",w:11,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"EHR Training",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"Epic EHR Module 3 — Clinical Workflows",est:"June 2026",cert:"CompTIA A+"}},
+"Lashonda Reeves":{t:"Cybersecurity with AI Tools",s:"awaiting",i:"LR",col:"#1d4ed8",w:14,c:["CompTIA Security+ (exam scheduled)"],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Cert Prep",d:true},{l:"Cert Exam",d:false,cur:true},{l:"Job Ready",d:false}],mod:"Security+ Exam Scheduled — May 2026",est:"May 2026",cert:"CompTIA Security+"}},
+"Carlos Mendez":{t:"Cybersecurity with AI Tools",s:"training",i:"CM",col:"#7c3aed",w:10,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Threat Analysis",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"Splunk SIEM & Threat Hunting",est:"June 2026",cert:"CompTIA Security+"}},
+"Jaylen Foster":{t:"Data Analytics / AI Native BI",s:"training",i:"JF",col:"#0369a1",w:9,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Advanced Projects",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"Power BI Service & Publishing",est:"June 2026",cert:"Power BI Associate"}},
+"Priya Nair":{t:"Data Analytics / AI Native BI",s:"training",i:"PN",col:"#0d9488",w:7,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Advanced Projects",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"SQL Advanced Queries & Joins",est:"June 2026",cert:"Power BI Associate"}},
+"Rashida Clark":{t:"Data Center Operations",s:"awaiting",i:"RC",col:"#be185d",w:14,c:["CompTIA A+ (exam scheduled)"],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Cert Prep",d:true},{l:"Cert Exam",d:false,cur:true},{l:"Job Ready",d:false}],mod:"CompTIA A+ Exam Scheduled — May 2026",est:"May 2026",cert:"CompTIA A+"}},
+"Isaiah Thomas":{t:"Data Center Operations",s:"training",i:"IT",col:"#4f46e5",w:8,c:[],
+  jrn:{steps:[{l:"Orientation",d:true},{l:"Core Labs",d:true},{l:"Data Center Ops",d:false,cur:true},{l:"Mock Interviews",d:false},{l:"Job Ready",d:false}],mod:"OSHA 10-Hour & Data Center Safety",est:"June 2026",cert:"CompTIA A+"}}
+};
+
+// Build dropdown
+const ddM = document.getElementById('ddMenu');
+const trks = {};
+Object.entries(CD).forEach(([n,c])=>{if(!trks[c.t])trks[c.t]=[];trks[c.t].push({n,c});});
+Object.entries(trks).forEach(([t,list])=>{
+  const sec=document.createElement('div');sec.className='dropdown-section';
+  sec.innerHTML=`<div class="dropdown-section-label">${t}</div>`;
+  list.forEach(({n,c})=>{
+    const d=document.createElement('div');d.className='dropdown-item';
+    const sl=c.s==='ir'?`<span class="di-st di-ir">🟢 Ready</span>`:c.s==='awaiting'?`<span class="di-st di-aw">🟡 Cert</span>`:`<span class="di-st di-tr">🔵 Wk${c.w}</span>`;
+    d.innerHTML=`<div class="di-av" style="background:${c.col}">${c.i}</div><span class="di-name">${n}</span>${sl}`;
+    d.onclick=()=>{openCM(n);toggleDD();};
+    sec.appendChild(d);
+  });
+  ddM.appendChild(sec);
+});
+
+function openCM(name){
+  const c=CD[name];if(!c)return;
+  document.getElementById('cm-title').textContent=name;
+  let b=`<div class="m-lbl">TRACK</div><div style="font-size:13px;font-weight:700;margin-bottom:8px;">${c.t}</div>`;
+  if(c.s==='ir'){
+    b+=`<div class="m-ready">🟢 Interview Ready — Power Skills Assessed</div>`;
+    b+=`<div class="m-lbl">CERTIFICATIONS EARNED</div><div class="mbadges">${c.c.map(x=>`<span class="mbadge">✓ ${x}</span>`).join('')}</div>`;
+    b+=`<div class="m-lbl">CANDIDATE SUMMARY</div><p style="font-size:12px;color:#444;line-height:1.6;margin-bottom:12px;">${c.sum}</p>`;
+    b+=`<div class="m-lbl">EMPLOYER ACTIONS</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+      <button class="btn btn-p" style="font-size:11px;" onclick="closeCM();loadPSAndSwitch('${name}')">⭐ Power Skills Profile</button>
+      <button class="btn btn-s" style="font-size:11px;" onclick="openPDF('report','${name}')">📊 Power Skills Report (PDF)</button>
+      <button class="btn btn-s" style="font-size:11px;" onclick="openPDF('resume','${name}')">📋 View Résumé (PDF)</button>
+      <button class="btn btn-p" style="font-size:11px;" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">🎯 Request Interview</button>
+    </div>`;
+  } else {
+    const lbl=c.s==='awaiting'?'🟡 Awaiting Certification':'🔵 In Training';
+    const bgc=c.s==='awaiting'?'#fef3c7':'#dbeafe';const tc=c.s==='awaiting'?'#92400e':'#1e40af';
+    b+=`<div style="display:inline-block;background:${bgc};color:${tc};border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:12px;">${lbl} — Week ${c.w} of 15</div>`;
+    b+=`<div class="jt-tracker"><h3>Training Journey Progress</h3><div class="jt-steps">`;
+    c.jrn.steps.forEach(st=>{
+      const cl=st.cur?'jt-step cur':st.d?'jt-step done':'jt-step';
+      b+=`<div class="${cl}"><div class="jt-dot">${st.cur?'▶':st.d?'✓':'·'}</div><div class="jt-lbl">${st.l}</div></div>`;
+    });
+    b+=`</div><div class="jt-info">
+      <div class="jt-ic"><div class="jt-il">Current Module</div><div class="jt-iv" style="font-size:10px;">${c.jrn.mod}</div></div>
+      <div class="jt-ic"><div class="jt-il">Est. Completion</div><div class="jt-iv">${c.jrn.est}</div></div>
+      <div class="jt-ic"><div class="jt-il">Target Cert</div><div class="jt-iv" style="font-size:10px;">${c.jrn.cert}</div></div>
+    </div></div>`;
+    b+=`<div style="background:#f7f9fc;border-radius:8px;padding:12px;font-size:12px;color:#444;line-height:1.6;margin-bottom:12px;">Power Skills reports and résumé become available once this candidate is confirmed interview-ready. <strong>Available in approximately ${15-c.w} weeks.</strong></div>`;
+    b+=`<button class="btn btn-p" style="font-size:11px;" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">📞 Contact Talent Solutions for Early Access</button>`;
+  }
+  document.getElementById('cm-body').innerHTML=b;
+  document.getElementById('cmOv').classList.add('open');
+}
+function closeCM(){document.getElementById('cmOv').classList.remove('open');}
+document.getElementById('cmOv').addEventListener('click',e=>{if(e.target===document.getElementById('cmOv'))closeCM();});
+
+function loadPSAndSwitch(n){switchTab('powerskills');document.getElementById('psSelect').value=n;loadPS(n);}
+function bars(obj,col){return Object.entries(obj).map(([k,v])=>`<div class="ss-row"><span class="ss-lbl">${k.replace(/([A-Z])/g,' $1').trim()}</span><div class="bar-bg"><div class="bar-fill" style="width:${v}%;background:${col}"></div></div><span class="ss-sc">${v}</span></div>`).join('');}
+
+function loadPS(name){
+  if(!name){document.getElementById('psContent').innerHTML='<div style="color:#aaa;text-align:center;padding:48px;font-size:13px;">Select a candidate above to view their full Power Skills profile.</div>';return;}
+  const c=CD[name];const s=c.sc;
+  const html=`
+    <div class="ps-header">
+      <div class="ps-header-left"><h2>${name}</h2><p>${c.c.join(' · ')}</p><div class="ps-track-tag">${c.t}</div></div>
+      <div class="ps-comp"><div class="ps-comp-num">${c.comp}</div><div class="ps-comp-lbl">COMPOSITE / 100</div></div>
+    </div>
+    <div class="ps-doc-row">
+      <div class="doc-card" onclick="openPDF('report','${name}')"><div class="doc-icon">📊</div><div><div class="doc-title">Power Skills Report</div><div class="doc-sub">Full 4-source assessment — ${name}</div><div class="doc-dl">⬇ Click to view & download PDF</div></div></div>
+      <div class="doc-card" onclick="openPDF('resume','${name}')"><div class="doc-icon">📋</div><div><div class="doc-title">Candidate Résumé</div><div class="doc-sub">Skills, experience &amp; certifications</div><div class="doc-dl">⬇ Click to view & download PDF</div></div></div>
+    </div>
+    <div class="ss-grid">
+      <div class="ss-card"><div class="ss-hdr"><span class="ss-icon">👩‍🏫</span><span class="ss-title">Instructor Assessment</span><span class="ss-src">Week ${c.w} of 15</span></div>${bars(s.ins,'#22c55e')}<div class="ss-note">${c.iN}</div></div>
+      <div class="ss-card"><div class="ss-hdr"><span class="ss-icon">👥</span><span class="ss-title">Peer Cohort Feedback</span><span class="ss-src">Cohort-rated</span></div>${bars(s.peer,'#3b82f6')}<div class="ss-note">${c.pN}</div></div>
+      <div class="ss-card"><div class="ss-hdr"><span class="ss-icon">🪞</span><span class="ss-title">Learner Self-Assessment</span><span class="ss-src">Week ${c.w-6} submission</span></div>${bars(s.self,'#8b5cf6')}<div class="ss-note">${c.sN}</div></div>
+      <div class="ss-card"><div class="ss-hdr"><span class="ss-icon">🏢</span><span class="ss-title">Employer Mock Interview</span><span class="ss-src">Session 2 of 2</span></div>${bars(s.emp,'#f59e0b')}<div class="ss-note">${c.eN}</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="window.open('https://perscholas.org/locations/st-louis/','_blank')">🎯 Request Interview with ${name.split(' ')[0]}</button>
+      <button class="btn btn-s" onclick="switchTab('pipeline')">← Back to Talent Pipeline</button>
+    </div>`;
+  document.getElementById('psContent').innerHTML=html;
+}
+
+function dbars(obj,col){return Object.entries(obj).map(([k,v])=>`<div class="dbr"><span class="dbl">${k.replace(/([A-Z])/g,' $1').trim()}</span><div class="dbb"><div class="dbf" style="width:${v}%;background:${col}"></div></div><span class="dbs">${v}</span></div>`).join('');}
+
+function openPDF(type,name){
+  const c=CD[name];let content='';
+  if(type==='report'){
+    document.getElementById('pdf-title').textContent=`Power Skills Report — ${name}`;
+    const s=c.sc;
+    content=`<div class="doc">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;">
+        <div><h1>${name}</h1><div class="dsub">${c.t} · 2026 Cohort · Per Scholas STL Employer Partner Portal</div></div>
+        <div style="background:#1a3d6e;color:white;border-radius:8px;padding:8px 14px;text-align:center;flex-shrink:0;"><div style="font-size:22px;font-weight:900;">${c.comp}</div><div style="font-size:9px;opacity:0.8;">COMPOSITE</div></div>
+      </div>
+      <div class="dsec"><h2>Track</h2><p>${c.t}</p></div>
+      <div class="dsec"><h2>Certifications Earned</h2><div class="dbw">${c.c.map(x=>`<span class="dbd">✓ ${x}</span>`).join('')}</div></div>
+      <div class="dsec"><h2>Candidate Summary</h2><p>${c.sum}</p></div>
+      <div class="dsec"><h2>👩‍🏫 Instructor Assessment</h2>${dbars(s.ins,'#22c55e')}<p style="margin-top:8px;font-style:italic;font-size:11px;color:#555;">${c.iN}</p></div>
+      <div class="dsec"><h2>👥 Peer Cohort Feedback</h2>${dbars(s.peer,'#3b82f6')}<p style="margin-top:8px;font-style:italic;font-size:11px;color:#555;">${c.pN}</p></div>
+      <div class="dsec"><h2>🪞 Learner Self-Assessment</h2>${dbars(s.self,'#8b5cf6')}<p style="margin-top:8px;font-style:italic;font-size:11px;color:#555;">${c.sN}</p></div>
+      <div class="dsec"><h2>🏢 Employer Mock Interview Feedback</h2>${dbars(s.emp,'#f59e0b')}<p style="margin-top:8px;font-style:italic;font-size:11px;color:#555;">${c.eN}</p></div>
+      <div class="dft"><p>Per Scholas STL · Employer Partner Portal · 2026 · perscholas.org/locations/st-louis</p><p>Confidential — for employer partner use only</p></div>
+    </div>`;
+  } else {
+    document.getElementById('pdf-title').textContent=`Résumé — ${name}`;
+    const r=c.res;
+    content=`<div class="doc">
+      <h1>${name}</h1>
+      <div class="dsub">St. Louis, MO · Per Scholas STL Graduate Candidate · 2026 · perscholas.org/locations/st-louis</div>
+      <div class="dsec"><h2>Professional Objective</h2><p>${r.obj}</p></div>
+      <div class="dsec"><h2>Certifications & Training</h2><div class="dbw">${c.c.map(x=>`<span class="dbd">${x}</span>`).join('')}</div><p style="margin-top:8px;">${r.ed}</p></div>
+      <div class="dsec"><h2>Professional Experience</h2>${r.exp.map(e=>`<p><strong>${e.r}</strong> · ${e.co} · ${e.p}</p><ul>${e.b.map(b=>`<li>${b}</li>`).join('')}</ul><br>`).join('')}</div>
+      <div class="dsec"><h2>Technical Skills</h2><div class="dbw">${r.sk.map(s=>`<span class="dbd">${s}</span>`).join('')}</div></div>
+      <div class="dft"><p>Per Scholas STL · Employer Partner Portal · 2026 · perscholas.org/locations/st-louis</p><p>Confidential — for employer partner use only</p></div>
+    </div>`;
+  }
+  document.getElementById('pdf-body').innerHTML=content;
+  document.getElementById('pdfOv').classList.add('open');
+}
+function closePDF(){document.getElementById('pdfOv').classList.remove('open');}
+function printDoc(){
+  const content=document.getElementById('pdf-body').innerHTML;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Per Scholas STL</title><style>
+  *{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,sans-serif;background:#f8f8f8;padding:20px;}
+  .doc{background:white;max-width:680px;margin:0 auto;padding:32px;border-radius:8px;font-size:12px;}
+  h1{font-size:20px;font-weight:900;color:#1a3d6e;margin-bottom:2px;}
+  .dsub{font-size:11px;color:#666;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid #1a3d6e;}
+  .dsec{margin-bottom:16px;}.dsec h2{font-size:11px;font-weight:800;color:#1a3d6e;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #e5e7eb;}
+  .dsec p{color:#333;line-height:1.6;margin-bottom:5px;}.dsec ul{padding-left:16px;}.dsec li{color:#333;line-height:1.7;}
+  .dbr{display:flex;align-items:center;gap:10px;margin-bottom:6px;}.dbl{width:150px;font-size:11px;color:#444;flex-shrink:0;}
+  .dbb{flex:1;height:8px;background:#f0ede8;border-radius:4px;overflow:hidden;}.dbf{height:100%;border-radius:4px;}.dbs{font-size:11px;font-weight:800;width:28px;text-align:right;}
+  .dbw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}.dbd{background:#eef2f8;color:#1a3d6e;border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700;}
+  .dft{margin-top:20px;padding-top:12px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;}.dft p{font-size:10px;color:#aaa;}
+  @media print{body{background:white;padding:0;}.doc{box-shadow:none;}}
+  </style></head><body>${content}</body></html>`);
+  w.document.close();setTimeout(()=>w.print(),500);
+}
+</script>
+</body>
+</html>
